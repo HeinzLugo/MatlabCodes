@@ -49,7 +49,7 @@
 % 7. Add on the preformat required to remove all negative values or power
 % values above 1600W. DONE
 % 8. Validation of matlab logic for test files. DONE
-% 9. Validation of matalab logic for warmup files. DONE
+% 9. Validation of matalab logic for warmup files. NOT DONE
 
 %{
 All variables needed to process the raw data files (e.g. column indexes) are defined in this section.
@@ -174,10 +174,10 @@ if testTypeSelection ~= 0
         %{
         Average and standard deviation values for each of the variables (e.g. power, cadence) are calculated in this section by time and distance.
         %}
-        if fileTypeSelection == 1
+        if testTypeSelection == 1
             resultDataByDistance = zeros(timeTrialDistance, indexColumnResultByDistance);
         else
-            resultDataByDistance = zeros(ceil(dataGarminFormatted(indexRowDataGarminFormatted, indexDistanceGarminFormatted)), indexColumnResultByDistance);
+            resultDataByDistance = zeros(ceil(dataGarminFormatted(indexRowDataGarminFormatted, indexDistance)), indexColumnResultByDistance);
         end
 
         resultDataByTime = zeros(ceil(dataGarminFormatted(size(dataGarminFormatted, 1), indexTimeGarminFormatted) / secondsToMinuteFactor), indexColumnResultByTime);
