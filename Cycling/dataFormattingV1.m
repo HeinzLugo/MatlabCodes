@@ -38,6 +38,31 @@
 % All raw files (i.e. Garmin and RPE) must be named using the test subjects
 % name and forename capitalised initials as the first two characters on the
 % file name. (e.g. HLfeedbackRPE, HLfeedback200814).
+% CAUTION:
+% 1. File paths are set to my home folder change accordingly to other
+% machines as required. Athough the file location is not relevant there
+% should be 3 folders, one named Test, one name Warmup and another named
+% RPEF or RPENF for the feedback and no feedback cases respectively.
+% 2. If you want to change the file paths you must change the following
+% variables:
+%   - filePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02
+%   Bike project/03 Test Data/Feedback tests/Import Files/Feedback';
+%   - filePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02
+%   Bike project/03 Test Data/Feedback tests/Import Files/No Feedback';
+%   - filePath = strcat(filePath, '/Test/');
+%   - filePath = strcat(filePath, '/Warmup/');
+%   - rpeFilePath = strcat('/Users/heinzlugo/Documents/01 Postgraduate
+%   project/02 Bike project/03 Test Data/Feedback tests/Import Files/Feedback/RPEF/', strcat(fileName(1:2), 'feedbackRPE.csv'));
+%   - rpeFilePath = strcat('/Users/heinzlugo/Documents/01 Postgraduate
+%   project/02 Bike project/03 Test Data/Feedback tests/Import Files/No
+%   feedback/RPENF/', strcat(fileName(1:2), 'NofeedbackRPE.csv'));
+%   -  outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate
+%   project/02 Bike project/03 Test Data/Feedback tests/Import Files/Feedback summary/Test/'; 
+%   -  outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate
+%   project/02 Bike project/03 Test Data/Feedback tests/Import Files/Feedback summary/Warmup/';
+%   - outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02 Bike project/03 Test Data/Feedback tests/Import Files/No feedback summary/Test/'; 
+%   - outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate
+%   project/02 Bike project/03 Test Data/Feedback tests/Import Files/No feedback summary/Warmup/'; 
 % TO DO:
 % 1. Check that the time per kilometer is correct. DONE
 % 2. Check that the average and standard deviation values are correct. DONE
@@ -50,6 +75,7 @@
 % values above 1600W. DONE
 % 8. Validation of matlab logic for test files. DONE
 % 9. Validation of matalab logic for warmup files. DONE
+% 10. Graphs logic. NOT DONE
 
 %{
 All variables needed to process the raw data files (e.g. column indexes) are defined in this section.
@@ -231,6 +257,39 @@ if testTypeSelection ~= 0
         %{
         Result tables are constructed and stored in this section. 
         %}
+        switch testTypeSelection
+            case 1
+                switch fileTypeSelection
+                    case 1
+                        outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02 Bike project/03 Test Data/Feedback tests/Import Files/Feedback summary/Test/'; 
+                    case 2
+                        outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02 Bike project/03 Test Data/Feedback tests/Import Files/Feedback summary/Warmup/';
+                end
+            case 2
+                switch fileTypeSelection
+                    case 1
+                        outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02 Bike project/03 Test Data/Feedback tests/Import Files/No feedback summary/Test/'; 
+                    case 2
+                        outputSummaryFilePath = '/Users/heinzlugo/Documents/01 Postgraduate project/02 Bike project/03 Test Data/Feedback tests/Import Files/No feedback summary/Warmup/'; 
+                end
+        end
+        outputSummaryDataByDistanceFileName = strcat('SumByDist', fileName);
+        outputSummaryDataByTimeFileName = strcat('SumByTime', fileName);
+        summaryDataByDistanceFile = strcat(outputSummaryFilePath, outputSummaryDataByDistanceFileName);
+        summaryDataByTimeFile = strcat(outputSummaryFilePath, outputSummaryDataByTimeFileName);
+        % Data by distance
+        resultDataByDistance_ColumnHeaders = ('Distance (Km), Time per Km (min), Speed average (Km/h), Speed standard deviation (Km/h), Heart rate average (BPM), Heart rate standard deviation (BPM), Cadence average (rpm), Cadence standard deviation (rpm), Power average (Watts), Power standard deviation (Watts)');
+        resultDataByDistance_File = fopen(summaryDataByDistanceFile, 'w+');
+        fprintf(resultDataByDistance_File, '%s', resultDataByDistance_ColumnHeaders);
+        fclose(resultDataByDistance_File);
+        dlmwrite(summaryDataByDistanceFile, resultDataByDistance, 'roffset', 1, '-append');
+        % Data by time
+        resultDataByTime_ColumnHeaders = ('Time (min), Distance per minute (Km), Speed average (Km/h), Speed standard deviation (Km/h), Heart rate average (BPM), Heart rate standard deviation (BPM), Cadence average (rpm), Cadence standard deviation (rpm), Power average (Watts), Power standard deviation (Watts)');
+        resultDataByTime_File = fopen(summaryDataByTimeFile, 'w+');
+        fprintf(resultDataByTime_File, '%s', resultDataByTime_ColumnHeaders);
+        fclose(resultDataByTime_File);
+        dlmwrite(summaryDataByTimeFile, resultDataByTime, 'roffset', 1, '-append');
+        % Data RPE
         
         %{
         Graphs are generated in this section if required.
